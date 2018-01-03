@@ -1,0 +1,93 @@
+.Change{
+  display:block;
+    float:left;
+    font-size:15px;
+    clear:both;
+}
+.TextArea1{
+   width:800px;
+    float:left;
+    margin-left: 30px;
+    margin-bottom:30px;
+}
+.Preservation{
+
+   margin-right:440px;
+    margin-bottom:20px ;
+}
+.Cancel{
+    margin-right: 440px;
+}
+.Idinput{
+    width:1000px;
+    height:55px;
+    margin-top:30px;
+}
+.Materialid{
+    float:left;
+    font-size:15px;
+}
+.Input{
+  width:780px;
+    height:40px;
+    float:left;
+    margin-left:30px;
+    margin-top:-10px;
+}
+.Determine{
+    margin-left:20px;
+     margin-top:-10px;
+}
+.Content{
+    width:1000px;
+    height:1400px;
+}
+.Coding{
+    width:350px;
+    height:35px;
+    float:left;
+    margin-left:30px;
+}
+.Source{
+    width:350px;
+    margin-left:80px;
+}
+.ant-select-selection__rendered{
+    line-height:35px!important;
+}
+.ant-select-selection--single{
+    height:35px!important;
+
+}
+.Coding1{
+    width:350px;
+    height:35px;
+    float:left;
+    margin-left:80px;
+}
+.Title-Materialid{
+    width:1000px;
+    height:70px;
+   
+}
+.CodeData{
+    position:fixed;
+    z-index:10;
+    width:780px;
+    heihgt:auto;
+    margin-left:95px;
+    margin-top:5px;
+  
+}
+.CodeData>li{
+    width:780px;
+    height:35px;
+    line-height:35px;
+    background-color:#fff;
+    border:1px solid #ccc;
+}
+.CodeData>li:hover{
+    cursor:pointer;
+    background-color:#ccc;
+}
+

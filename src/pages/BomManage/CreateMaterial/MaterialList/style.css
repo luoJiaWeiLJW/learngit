@@ -1,0 +1,9 @@
+.ant-tree-switcher ant-tree-noline_close{
+    display:none;
+}
+.ant-tree li .ant-tree-node-content-wrapper{
+    font-size:15px!important;
+}
+.ant-tree{
+    padding-left:55px!important;
+}

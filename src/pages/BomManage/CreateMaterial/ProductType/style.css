@@ -1,0 +1,21 @@
+.seat{
+    display:block;
+    width:15px;
+    float:left;
+   
+}
+.ifont{
+    display:block;
+    float:left;
+    width:10px;
+    height:10px;
+    line-height:10px;
+    padding-top:5px;
+}
+.All{
+    cursor:pointer;
+    padding:5px;
+}
+.All:hover{
+    background-color:#ecf6fd;
+}
