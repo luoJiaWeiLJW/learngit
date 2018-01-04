@@ -1,0 +1,8 @@
+.checkClass{
+    margin: 1% 0px;
+}
+.checkClass>span{
+    display: inline-block;
+    margin: 0px 1%;
+    font-size: 16px;
+}

@@ -1,18 +1,22 @@
 import React, {Component} from 'react';
 import {DatePicker,Cascader,Button,Modal,Table} from 'antd';
-//import { Link } from 'react-router';
-//import { Layout} from 'antd';
 import axios from 'axios';
-//const {  Content } = Layout;
+import AddForm1 from './AddForm1'
+import './WRevenue.css';
 const { RangePicker } = DatePicker;
 class WarehousingRevenue extends Component {
   constructor(props){
     super(props);
+    let visible=false;
+    let dataSource= [];
+    const pagination = {showSizeChanger: true, showQuickJumper: true, showTotal: total => '共 ' + total + ' 条'};
     this.state={
-      visible:false
+      visible,
+      dataSource,
+      pagination
     }
   };
-  //新增的对话框
+  //新增的Modal
   showModal = () => {
     this.setState({
       visible: true,
@@ -40,42 +44,45 @@ class WarehousingRevenue extends Component {
     console.log('onOk: ', value);
   }
   render() {
+    const {visible,dataSource,pagination}=this.state;//
+    //debugger
     const detailColumnTop= [
-      {title: '日期', dataIndex: 'code',width:'10%'},
-      {title: '金额', dataIndex: 'name',width:'10%'},
-      {title: '单号', dataIndex: 'model',width:'10%'},//
-      {title: '', dataIndex: 'unit',width:'10%'}
+      {title: '日期', dataIndex: 'code'},
+      {title: '金额', dataIndex: 'name'},
+      {title: '单号', dataIndex: 'model'},
+      {title: '', dataIndex: 'unit', key: "unit",render:(text,record, index)=>{
+        return (
+            <div>
+              <Button>删除</Button>
+              <Button>修改</Button>
+            </div>
+        )
+    }}
     ];
     return (
       <div>
-        入库
-        <div>
+        <div className='Addre'>
           <DatePicker
             showTime
             format="YYYY-MM"
             placeholder="Select Time"
             onChange={this.onChange}
             onOk={this.onOk}
+            className='Datecss'
           />
           <Button type="primary" onClick={this.showModal}>新增</Button>
-          <Modal
-          title="Basic Modal"
-          visible={this.state.visible}
+        </div>
+        <AddForm1 
+          visible={visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
-        >
-          <Table
-            columns={detailColumnTop}
-            axios={this.axios}
-            pagination={false}
-            size="middle" />
-        </Modal>
+          />
         <Table
+            pagination={pagination}
+            dataSource={dataSource}
             columns={detailColumnTop}
             axios={this.axios}
-            pagination={false}
             />
-        </div>
       </div>
     )
   }
