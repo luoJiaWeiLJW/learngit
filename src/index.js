@@ -16,7 +16,7 @@ import Setup from './pages/Setup';
 import axios from 'axios';
 
 //'/api'用于转发到gateway
-axios.defaults.baseURL = '/';
+axios.defaults.baseURL = '/';//api
 
  ReactDOM.render(
      (

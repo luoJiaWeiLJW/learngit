@@ -17,7 +17,6 @@ class AddForm extends Component {
   handleSubmit = (e) => {
     //debugger
     e.preventDefault();
-
     this.props.form.validateFields((err, fieldsValue) => {
       if (err) {
         return;
@@ -25,9 +24,22 @@ class AddForm extends Component {
       // Should format date value before submit.
       const values = {
         ...fieldsValue,
-        'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
+        'date': fieldsValue['date'].format('YYYY-MM-DD'),
       };
       console.log('Received values of form: ', values);
+     
+      //console.log(this.props.form.getFieldsValue().putMoney,"3333333333")
+      axios({
+        url: '/post_PutStatistics',
+        method:'post',
+        data:{
+          ...values 
+        }
+      }).then(res=>{
+        this.props.axios({pageindex: 1,pagesize: 10});
+        this.props.onCancel();
+        this.props.form.resetFields();
+      })
     });
   };
   handleConfirmBlur = (e) => {
@@ -82,7 +94,7 @@ class AddForm extends Component {
             {...formItemLayout}
             label="日期"
           >
-          {getFieldDecorator('date-picker',config)(
+          {getFieldDecorator('date',config)(
             <DatePicker onChange={this.onChange}/>
             )}
         </FormItem>
@@ -90,7 +102,7 @@ class AddForm extends Component {
             {...formItemLayout}
             label="金额"
           >
-            {getFieldDecorator('金额', {
+            {getFieldDecorator('putMoney', {
               rules: [{
                 required: true, message: '请填写金额!',
               }, {
@@ -104,14 +116,14 @@ class AddForm extends Component {
             {...formItemLayout}
             label="单号"
           >
-            {getFieldDecorator('单号', {
+            {getFieldDecorator('putNumber', {
               rules: [{
                 required: true, message: '请填写单号!',
               }, {
                 validator: this.checkPassword2,
               }],
             })(
-              <Input type="text" onBlur={this.handleConfirmBlur} />
+              <Input type="text" onBlur={this.handleConfirmBlur}  />
             )}
         </FormItem>
         </Form>

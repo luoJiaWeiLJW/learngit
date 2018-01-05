@@ -24,14 +24,32 @@ class AddForm extends Component {
       // Should format date value before submit.
       const values = {
         ...fieldsValue,
-        'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
+        //'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
       };
       console.log('Received values of form: ', values);
+      axios({
+        url:'/update_target/6048ce49ba5d4ecfb0a8a4aabe84b2a1',
+        method:'put',
+        data:{
+          month:"sd",
+           ...values
+        }
+      }).then(res=>{
+        console.log('res',res);
+        this.props.axios({pageindex: 1});
+        this.props.onCancel();
+        this.props.form.resetFields();
+      })
     });
   };
   handleConfirmBlur = (e) => {
     const value = e.target.value;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+  }
+  checkP = (value,callback) =>{
+      if(value<1){
+        callback("ssss")
+      }
   }
   onChange(value, dateString) {
     console.log('Selected Time: ', value);
@@ -70,28 +88,34 @@ class AddForm extends Component {
       <Modal 
         visible={this.props.visible}
         title={[
-          <span style={{fontSize:'23px'}} key='exid'>销售统计</span>,
+          <span style={{fontSize:'23px'}} key='exid'>基础设置</span>,
         ]}
         onCancel={this.props.onCancel}
         onOk={this.handleSubmit}
         style={{minWidth: 800}}
       >
         <Form>
-          <FormItem
+        <FormItem
             {...formItemLayout}
-            label="日期"
+            label="月固定成本系数"
           >
-          {getFieldDecorator('date-picker',config)(
-            <DatePicker onChange={this.onChange}/>
+            {getFieldDecorator('monthFixedCost', {
+              rules: [{
+                required: true, message: '请填写金额!',
+              }, {
+                validator: this.checkP,
+              }],
+            })(
+              <Input type="text" onBlur={this.handleConfirmBlur} />
             )}
         </FormItem>
         <FormItem
             {...formItemLayout}
-            label="金额"
+            label="每月利润目标"
           >
-            {getFieldDecorator('金额', {
+            {getFieldDecorator('monthTarget', {
               rules: [{
-                required: true, message: '请填写金额!',
+                required: true, message: '请填写目标!',
               }, {
                 validator: this.checkPassword1,
               }],
@@ -101,11 +125,11 @@ class AddForm extends Component {
         </FormItem>
         <FormItem
             {...formItemLayout}
-            label="单号"
+            label="每月现金流增量目标"
           >
-            {getFieldDecorator('单号', {
+            {getFieldDecorator('monthCashFlow', {
               rules: [{
-                required: true, message: '请填写单号!',
+                required: true, message: '请填写目标!',
               }, {
                 validator: this.checkPassword2,
               }],

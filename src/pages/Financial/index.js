@@ -1,134 +1,87 @@
 import React, {Component} from 'react';
-import {Table,Input,Button,Cascader} from 'antd';
+import {DatePicker, message, Table,Input,Button,Cascader} from 'antd';
+import checkCode from '../../config/codeTips';
+import moment from 'moment';
+import axios from 'axios';
 import './financial.css';
+const { MonthPicker } = DatePicker;
+
 class Financial extends Component {
   constructor(props){
     super(props);
     let dataSource= [];
-    let yearm=[];
-    const pagination = {showSizeChanger: true, showQuickJumper: true, showTotal: total => '共 ' + total + ' 条'};
+    const pagination = {pagesize:2, pageindex:1, showSizeChanger: true, showQuickJumper: true, showTotal: total => '共 ' + total + ' 条'};//10
     this.state={
       dataSource,
-      yearm,
       pagination
-    }
-  };
-  onChange(value) {
-    if(value.length < 2){
-      return
-    }else{
-      console.log(value);
-      this.setState({
-      yearm : value
-     });
-    }
-  }
-  render() {
-    const {dataSource,pagination}=this.state;
+    };
     const detailColumnTop= [
-      {title: '月份', dataIndex: 'month',width:'10%'},
-      {title: '当月总收入', dataIndex: 'monthIncome',width:'10%'},
-      {title: '当月成本（含摊销）', dataIndex: 'monthCost',width:'10%'},
-      {title: '当月利润', dataIndex: 'monthProfit',width:'10%'},
-      {title: '累计利润', dataIndex: 'cumProfit',width:'10%'},
-      {title: '累计总收入', dataIndex: 'cumIncome',width:'10%'},
-      {title: '累计总支出', dataIndex: 'cumSpend',width:'10%'},
-      {title: '累计现金流', dataIndex: 'cumCashflow',width:'10%'},
+      {title: '月份', dataIndex: 'month',key:'month',width:'10%'},
+      {title: '当月总收入', dataIndex: 'currentIncome',key:'currentIncome',width:'10%'},
+      {title: '当月成本（含摊销）', dataIndex: 'currentCost',key:'currentCost',width:'10%'},
+      {title: '当月利润', dataIndex: 'currentProfit',key:'currentProfit',width:'10%'},
+      {title: '累计利润', dataIndex: 'accumulativeProfit',key:'accumulativeProfit',width:'10%'},
+      {title: '累计总收入', dataIndex: 'accumulativeGeneralIncome',key:'accumulativeGeneralIncome',width:'10%'},
+      {title: '累计总支出', dataIndex: 'accumulativeTotalExpenditure',key:'accumulativeTotalExpenditure',width:'10%'},
+      {title: '累计现金流', dataIndex: 'accumulativeCashFlow',key:'accumulativeCashFlow',width:'10%'},
     ];
-    const options = [{
-      value: '2018',
-      label: '2018',
-      children: [{
-        value: '1',
-        label: '1',
-      },{
-        value: '2',
-        label: '2',
-      },{
-        value: '3',
-        label: '3',
-      },{
-        value: '4',
-        label: '4',
-      },{
-        value: '5',
-        label: '5',
-      },{
-        value: '6',
-        label: '6',
-      },{
-        value: '7',
-        label: '7',
-      },{
-        value: '8',
-        label: '8',
-      },{
-        value: '9',
-        label: '9',
-      },{
-        value: '10',
-        label: '10',
-      },{
-        value: '11',
-        label: '11',
-      },{
-        value: '12',
-        label: '12',
+    console.log(pagination);
+    this.columns = detailColumnTop;
+  };
+
+  componentDidMount() {
+    this.axios();
+  }
+
+  handleTableChange() {
+    this.axios({
+      pagesize: this.state.pagination.pagesize||10,
+      pageindex:this.state.pagination.pageindex||1
+
+    });
+  }
+
+  handleSearch = (date, dateString) =>{//按条件搜索
+    this.axios({
+      date: dateString,
+      pagesize:this.state.pagination.pagesize||10,
+      pageindex:1,
+    });
+  }
+
+  axios = (params = {}) => {
+    axios({
+      url: "/financings",
+      method: "get",
+      params: {
+        ...params
       }
-    ],
-    }, {
-      value: '2017',
-      label: '2017',
-      children: [{
-        value: '1',
-        label: '1',
-      },{
-        value: '2',
-        label: '2',
-      },{
-        value: '3',
-        label: '3',
-      },{
-        value: '4',
-        label: '4',
-      },{
-        value: '5',
-        label: '5',
-      },{
-        value: '6',
-        label: '6',
-      },{
-        value: '7',
-        label: '7',
-      },{
-        value: '8',
-        label: '8',
-      },{
-        value: '9',
-        label: '9',
-      },{
-        value: '10',
-        label: '10',
-      },{
-        value: '11',
-        label: '11',
-      },{
-        value: '12',
-        label: '12',
-      }
-    ],
-    }]
+    }).then(res => {
+      if (checkCode(res.data.code)) {
+        const pagination = {...this.state.pagination};
+        pagination.total = parseInt(res.data.total,0) || 0;
+        let dataSource = [];
+        if (res.data.data instanceof Array) {
+          dataSource = res.data.data;
+        }
+        this.setState({
+          pagination,
+          dataSource
+        })
+      };
+    }).catch(e => {
+      message.error("系统出错,请重新尝试");
+      this.setState({loading: false})
+    })
+  };
+
+  render() {
     return (
       <div>
         <div className="checkClass">
-        <span>月份</span><Cascader options={options} onChange={this.onChange} changeOnSelect /><Button type="primary">查询</Button>
+        <span>月份</span><MonthPicker defaultValue={moment('2018/01', 'YYYY/MM')} format='YYYY/MM' onChange={this.handleSearch} /><Button type="primary">查询</Button>
         </div>
-        <Table
-            pagination={pagination}
-            dataSource={dataSource}
-            columns={detailColumnTop}
-            axios={this.axios}
-            />
+        <Table pagination={this.state.pagination} rowKey={record=>record.id} dataSource={this.state.dataSource} columns={this.columns} onChange={this.handleTableChange} />
       </div>
     )
   }

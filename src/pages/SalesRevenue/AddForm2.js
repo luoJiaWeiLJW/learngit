@@ -17,7 +17,6 @@ class AddForm extends Component {
   handleSubmit = (e) => {
     //debugger
     e.preventDefault();
-
     this.props.form.validateFields((err, fieldsValue) => {
       if (err) {
         return;
@@ -25,9 +24,25 @@ class AddForm extends Component {
       // Should format date value before submit.
       const values = {
         ...fieldsValue,
-        'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
+        'date': fieldsValue['date'].format('YYYY-MM-DD'),
       };
-      console.log('Received values of form: ', values);
+      console.log('Received values of form: ', values); 
+      //console.log(this.props.form.getFieldsValue().putMoney,"3333333333")
+      axios({
+        url: '/add_sell_statistics',
+        method:'post',
+        data:{
+          dept:'事业部',
+          ...values 
+        }
+      }
+    ).then(res=>{
+        this.props.axios({pageindex: 1});
+        console.log("s");
+        this.props.onCancel();
+        console.log("e");
+        this.props.form.resetFields();
+      }) 
     });
   };
   handleConfirmBlur = (e) => {
@@ -82,7 +97,7 @@ class AddForm extends Component {
             {...formItemLayout}
             label="日期"
           >
-          {getFieldDecorator('date-picker',config)(
+          {getFieldDecorator('date',config)(
             <DatePicker onChange={this.onChange}/>
             )}
         </FormItem>
@@ -90,7 +105,7 @@ class AddForm extends Component {
             {...formItemLayout}
             label="金额"
           >
-            {getFieldDecorator('金额', {
+            {getFieldDecorator('sellMoney', {
               rules: [{
                 required: true, message: '请填写金额!',
               }, {
@@ -104,7 +119,7 @@ class AddForm extends Component {
             {...formItemLayout}
             label="单号"
           >
-            {getFieldDecorator('单号', {
+            {getFieldDecorator('sellNumber', {
               rules: [{
                 required: true, message: '请填写单号!',
               }, {
