@@ -3,6 +3,7 @@ import {DatePicker,Button,Table,message} from 'antd';
 import axios from 'axios';
 import AddForm1 from './AddForm1'
 import './WRevenue.css';
+const { MonthPicker } = DatePicker;
 
 class WarehousingRevenue extends Component {
   constructor(props){
@@ -10,12 +11,14 @@ class WarehousingRevenue extends Component {
     let visible=false;
     let dataSource= [];
     let pagination = {showSizeChanger: true, showQuickJumper: true, showTotal: total => '共 ' + total + ' 条'};
+    const sorter = {order: ""}
     let loading = false;
     this.state={
       loading,
       visible,
       dataSource,
-      pagination
+      pagination,
+      sorter 
     }
     const columns= [
       {title: '日期', dataIndex: 'date',key:"date"},
@@ -33,7 +36,7 @@ class WarehousingRevenue extends Component {
     ];
     this.columns = columns;
   };
-
+    
   statusRender = (text, record) =>{
     //console.log('text',text);
     if(text !== '0'){
@@ -51,7 +54,7 @@ class WarehousingRevenue extends Component {
       }).then(res=>{
         //console.log(res);
         message.success("刪除成功")
-        this.axios({pageindex: 1});
+        this.axios();
       })
     }else{
       console.log('record',record.status);
@@ -62,10 +65,10 @@ class WarehousingRevenue extends Component {
           ...record
         }
       }).then(res=>{
-         //console.log('res',res);
-         message.success("sf");
-         this.axios({pageindex: 1})
-         this.axios({pageindex: 1,pagesize: 10})
+         console.log('res',res);
+         message.success("上报成功");
+         this.axios()
+         this.axios()
          console.log(record.status);
       })
     }
@@ -73,15 +76,21 @@ class WarehousingRevenue extends Component {
 
   handleTableChange = (pagination, filters, sorter) => {
     const pager = {...this.state.pagination};
-    pager.current = pagination.current;
+    let pageindex = 1;
+    if (sorter.field !== this.state.sorter.field) {
+      pageindex = 1;
+    } else {
+      pageindex = pagination.current
+    }
+    pager.current = pageindex;
     pager.pagesize = pagination.pageSize;
     const sort = {};
     sort.field = sorter.field;
     sort.order = sorter.order;
-    this.axios({
-      pageindex:pager.current,
-      pagesize:pager.pagesize
-    })
+    this.setState({
+      pagination: pager,
+      sorter: sort
+    });
   };
 
   axios = (params = {}) => {
@@ -102,7 +111,7 @@ class WarehousingRevenue extends Component {
         ...params
       }
      }).then(res => {
-       //console.log('res',res);
+       console.log('res',res);
        if(res.status !== 200){
          //console.log('xxx');
           const pagination = {...this.state.pagination};
@@ -141,12 +150,13 @@ class WarehousingRevenue extends Component {
           this.setState({
             allsele:res.data
           })
+          const {allsele,allwarre}= this.state;
+          console.log("allsele: "+allsele+"========="+"allwarre: "+ allwarre)
+          if(allwarre > allsele){
+            message.error("入库金额大于销售金额的105%！")
+          }
         })
       })
-      const {allsele,allwarre}= this.state;
-      if(allwarre > allsele){
-        message.error("入库金额大于销售金额的105%！")
-      }
     }).catch(e => {
       message.error("系统出错,请重新尝试");
       this.setState({loading: false})
@@ -154,7 +164,7 @@ class WarehousingRevenue extends Component {
   };
 
   componentDidMount() {
-    this.axios({pageindex: 1,pagesize: 10});
+    this.axios();
   }
 
   //新增的Modal
@@ -174,13 +184,18 @@ class WarehousingRevenue extends Component {
   }
 
   //日期
-  onChange(value, dateString) {
-    //console.log('Selected Time: ', value);
-    //console.log('Formatted Selected Time: ', dateString);
-  }
-  
-  onOk(value) {
-    //console.log('onOk: ', value);
+  handleSearch = (date, dateString) =>{//按条件搜索
+    let selet = dateString.replace("/","-");
+    console.log(selet);
+    axios({
+      url:"get_month_PutStatistics?month="+selet,
+      method:"get"
+    }).then(res =>{
+      console.log(res);
+      this.setState({
+        dataSource:res.data.data        
+      })
+    })
   }
 
   render =() => {
@@ -189,14 +204,7 @@ class WarehousingRevenue extends Component {
     return (
       <div>
         <div className='Addre'>
-          <DatePicker
-            showTime
-            format="YYYY-MM"
-            placeholder="Select Time"
-            onChange={this.onChange}
-            onOk={this.onOk}
-            className='Datecss'
-          />
+          <MonthPicker format='YYYY/MM' onChange={this.handleSearch} />
           <Button type="primary" onClick={this.showModal}>新增</Button>
         </div>
         <AddForm1 

@@ -79,10 +79,7 @@ module.exports = function(proxy, allowedHost) {
     public: allowedHost,
     proxy:{
       '/':{
-          //target:"http://192.168.2.21"
-          // target:"http://192.168.2.9:8761"
           target:"http://192.168.2.140:10010"
-          // http://60.191.78.148:9527
       }
     },
     setup(app) {

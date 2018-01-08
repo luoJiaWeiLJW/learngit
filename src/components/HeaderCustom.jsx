@@ -89,7 +89,7 @@ class HeaderCustom extends Component {
             <Header style={{ background: '#fff', padding: 0, height: 65 }} className="custom-theme" >
               
                 
-                <span style={{fontSize:18,fontWeight:"bolder",marginLeft:'50px'}}>松堡王国物料管理</span>
+                <span style={{fontSize:18,fontWeight:"bolder",marginLeft:'50px'}}>松堡王国财务辅助工具</span>
                 <Menu
                     mode="horizontal"
                     style={{ lineHeight: '64px', float: 'right' }}

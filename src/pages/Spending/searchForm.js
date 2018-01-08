@@ -15,26 +15,35 @@ class AdvancedSearchForm extends React.Component {
     };
     const children = [];
     const keys = [
-      {title: "部门", dataIndex: "code", key: "code"},
-      {title: "ID", dataIndex: "name", key: "name"},
-      {title: "日期", dataIndex: "createUserId", key: "createUserId"},
-      {title: "名称", dataIndex: "status", key: "status"},
+      {title: "部门", dataIndex: "dept", key: "dept"},
+      {title: "种类", dataIndex: "variety", key: "variety"},
+      {title: "日期", dataIndex: "date", key: "date"},
+      {title: "名称", dataIndex: "name", key: "name"},
     ];
     if (keys) {
       for (let i = 0; i < keys.length; i++) {
         let input = <Input autoComplete="off"/>;
-        if(keys[i].dataIndex==="createUserId"){
+        if(keys[i].dataIndex==="date"){
           input = (
               <DatePicker styles={{width:"200px"}} />
           )
         }
-        if(keys[i].dataIndex==="code") {
+        if(keys[i].dataIndex==="dept") {
           input = (
               <Select onSelect={this.handleSelect}>
                 <Option value="0">生产</Option>
                 <Option value="1">销售</Option>
                 <Option value="2">其他</Option>
-                <Option value="-1">全部</Option>
+                {/* //<Option value="-1">全部</Option> */}
+              </Select>
+          )
+        }
+        if(keys[i].dataIndex==="variety"){
+          input = (
+            <Select onSelect={this.handleSelect}>
+                <Option value="0">一次性支出</Option>
+                <Option value="1">原料支出</Option>
+                <Option value="2">固定资产支出</Option>
               </Select>
           )
         }

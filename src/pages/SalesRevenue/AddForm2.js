@@ -53,6 +53,15 @@ class AddForm extends Component {
     console.log('Selected Time: ', value);
     console.log('Formatted Selected Time: ', dateString);
   }
+  checkMoney = (rule,value,callback) => {
+    const expet=/^\d/;
+    if(expet.test(value)){
+      callback();
+    }else{
+      callback("请输入数字");
+    }
+  }
+
   render(){
     const { getFieldDecorator } = this.props.form;
     const FormItems = [];
@@ -109,7 +118,7 @@ class AddForm extends Component {
               rules: [{
                 required: true, message: '请填写金额!',
               }, {
-                validator: this.checkPassword1,
+                validator: this.checkMoney,
               }],
             })(
               <Input type="text" onBlur={this.handleConfirmBlur} />
@@ -122,8 +131,6 @@ class AddForm extends Component {
             {getFieldDecorator('sellNumber', {
               rules: [{
                 required: true, message: '请填写单号!',
-              }, {
-                validator: this.checkPassword2,
               }],
             })(
               <Input type="text" onBlur={this.handleConfirmBlur} />

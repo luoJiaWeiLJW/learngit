@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {DatePicker,Cascader,Button,Modal,Table,message} from 'antd';
+import {DatePicker,Button,Table,message} from 'antd';
 import axios from 'axios';
 import AddForm2 from './AddForm2'
 import '../WarehousingRevenue/WRevenue.css';
-const { RangePicker } = DatePicker;
+const { MonthPicker } = DatePicker;
+
 class WarehousingRevenue extends Component {
   constructor(props){
     super(props);
@@ -96,11 +97,11 @@ class WarehousingRevenue extends Component {
       }
      }).then(res => {
        //console.log('res',res);
-       if(res.status != 200){
+       if(res.status !== 200){
          //console.log('xxx');
           const pagination = {...this.state.pagination};
           pagination.total = 0;
-          if(res.data.data.code != 200){
+          if(res.data.data.code !== 200){
             this.setState({
                 loading: false,
                 pagination
@@ -147,27 +148,21 @@ class WarehousingRevenue extends Component {
     });
   }
   //日期
-  onChange(value, dateString) {
-    console.log('Selected Time: ', value);
-    console.log('Formatted Selected Time: ', dateString);
+  handleSearch = (date, dateString) =>{//按条件搜索
+    console.log("dateString",dateString)
+    // this.axios({
+    //   date: dateString,
+    //   pagesize:this.state.pagination.pagesize||10,
+    //   pageindex:1,
+    // });
   }
-  
-  onOk(value) {
-    console.log('onOk: ', value);
-  }
+
   render =() => {
     const {visible,dataSource,pagination}=this.state;
     return (
       <div>
         <div className='Addre'>
-          <DatePicker
-            showTime
-            format="YYYY-MM"
-            placeholder="Select Time"
-            onChange={this.onChange}
-            onOk={this.onOk}
-            className='Datecss'
-          />
+          <MonthPicker format='YYYY/MM' onChange={this.handleSearch} />
           <Button type="primary" onClick={this.showModal}>新增</Button>
         </div>
         <AddForm2

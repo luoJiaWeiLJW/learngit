@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete ,message,TreeSelect,Modal,DatePicker} from 'antd';
+import { InputNumber, Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete ,message,TreeSelect,Modal,DatePicker} from 'antd';
 import axios from "axios";
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -14,9 +14,7 @@ class AddForm extends Component {
     autoCompleteResult: [],
   };
   handleSubmit = (e) => {
-    //debugger
-    e.preventDefault();
-
+    console.log("111111")
     this.props.form.validateFields((err, fieldsValue) => {
       if (err) {
         return;
@@ -31,7 +29,6 @@ class AddForm extends Component {
         url:'/update_target/6048ce49ba5d4ecfb0a8a4aabe84b2a1',
         method:'put',
         data:{
-          month:"sd",
            ...values
         }
       }).then(res=>{
@@ -46,10 +43,12 @@ class AddForm extends Component {
     const value = e.target.value;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
   }
-  checkP = (value,callback) =>{
-      if(value<1){
-        callback("ssss")
-      }
+  checkPrice = (rule, value, callback) =>{
+    if (value.number > 0) {
+      callback();
+      return;
+    }
+    callback('请输入数字!');
   }
   onChange(value, dateString) {
     console.log('Selected Time: ', value);
@@ -102,11 +101,9 @@ class AddForm extends Component {
             {getFieldDecorator('monthFixedCost', {
               rules: [{
                 required: true, message: '请填写金额!',
-              }, {
-                validator: this.checkP,
               }],
             })(
-              <Input type="text" onBlur={this.handleConfirmBlur} />
+              <InputNumber min={0} step={0.1} />
             )}
         </FormItem>
         <FormItem
@@ -116,11 +113,9 @@ class AddForm extends Component {
             {getFieldDecorator('monthTarget', {
               rules: [{
                 required: true, message: '请填写目标!',
-              }, {
-                validator: this.checkPassword1,
               }],
             })(
-              <Input type="text" onBlur={this.handleConfirmBlur} />
+              <InputNumber min={0} step={0.1} />
             )}
         </FormItem>
         <FormItem
@@ -130,11 +125,9 @@ class AddForm extends Component {
             {getFieldDecorator('monthCashFlow', {
               rules: [{
                 required: true, message: '请填写目标!',
-              }, {
-                validator: this.checkPassword2,
               }],
             })(
-              <Input type="text" onBlur={this.handleConfirmBlur} />
+              <InputNumber min={0} step={0.1} />
             )}
         </FormItem>
         </Form>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button,Modal,Table,message} from 'antd';
+import {Button,Table,message} from 'antd';
 import AddForm3 from './AddForm3';
 import axios from 'axios';
 class Setup extends Component {
@@ -69,11 +69,11 @@ class Setup extends Component {
        let dataSource = [res.data];
        //console.log(res.data.data instanceof Array)
        console.log('dataSource',dataSource);
-       if(res.status != 200){
+       if(res.status !== 200){
          //console.log('xxx');
           const pagination = {...this.state.pagination};
           pagination.total = 0;
-          if(res.data.data.code != 200){
+          if(res.data.data.code !== 200){
             this.setState({
                 loading: false,
                 pagination

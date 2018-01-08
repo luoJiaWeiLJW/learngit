@@ -13,7 +13,7 @@ class AddForm extends Component {
   let 
   state = {
     confirmDirty: false,
-    autoCompleteResult: [],
+    
     changeType:'0',
     changeDatp:'0',
     changeAmortize:'0'
@@ -48,7 +48,7 @@ class AddForm extends Component {
           amortizeTime:values.Month
         }
       }).then(res=>{
-        this.props.axios({pageindex: 1});
+        this.props.axios();
         this.props.onCancel();
         this.props.form.resetFields();
       })
@@ -64,8 +64,17 @@ class AddForm extends Component {
   }
   handleChangeType =(value) =>{
     console.log(`selected ${value}`);
+    //是否摊销(除一次性支出外的其他类型都自动摊销)
+    let changeAmortize = "0";
+    if(value != "0"){
+      changeAmortize = "1";
+    }else{
+      //将摊销月份默认设置为1
+      // this.form.setFieldsValue("Month", "1");
+    }
     this.setState({
-      changeType:`${value}`
+      changeType:`${value}`,
+      changeAmortize: changeAmortize
     })
   }
   handleChangeDapt =(value) =>{
@@ -132,8 +141,8 @@ class AddForm extends Component {
         <FormItem {...formItemLayout} label="种类">
           <Select defaultValue="0" style={{ width: 120 }} onChange={this.handleChangeType}>
               <Option value="0">一次性支出</Option>
-              <Option value="1">原料</Option>
-              <Option value="2">逐步摊销支出</Option>
+              <Option value="1">原料支出</Option>
+              <Option value="2">固定资产支出</Option>
           </Select>
         </FormItem>
         <FormItem
@@ -171,19 +180,13 @@ class AddForm extends Component {
               <Input type="text" onBlur={this.handleConfirmBlur}  />
             )}
         </FormItem>
-        <FormItem {...formItemLayout} label="是否摊销">
-          <Select defaultValue="1" style={{ width: 120 }} onChange={this.handleChangeAmortize}>
-              <Option value="0">否</Option>
-              <Option value="1">是</Option>
-          </Select>
-        </FormItem>
         <FormItem
             {...formItemLayout}
-            label="摊销时间（月）"
+            label="均摊成本时间（月）"
           >
             {getFieldDecorator('Month', {
               rules: [{
-                required: true, message: '请填写摊销月!',
+                required: true, message: '请填写均摊月!',
               }, {
                 validator: this.checkPassword2,
               }],
