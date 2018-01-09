@@ -57,20 +57,24 @@ class WarehousingRevenue extends Component {
         this.axios();
       })
     }else{
-      console.log('record',record.status);
-      axios({
-        url:'/put_statistics/'+record.id,
-        method :'put',
-        data:{
-          ...record
-        }
-      }).then(res=>{
-         console.log('res',res);
-         message.success("上报成功");
-         this.axios()
-         this.axios()
-         console.log(record.status);
-      })
+      console.log('record1',record.status);
+      if(record.status !== '0'){
+        message.error("已加入计算");
+      }else{
+        console.log('record1',record.status);
+        axios({
+          url:'/put_statistics/'+record.id,
+          method :'put',
+          data:{
+            ...record
+          }
+        }).then(res=>{
+           console.log('res',res);
+           message.success("上报成功");
+           this.axios()
+           console.log(record.status);
+        })
+      }
     }
   }
 
@@ -185,10 +189,10 @@ class WarehousingRevenue extends Component {
 
   //日期
   handleSearch = (date, dateString) =>{//按条件搜索
-    let selet = dateString.replace("/","-");
-    console.log(selet);
+    //let selet = dateString.replace("/","-");
+    console.log(dateString);
     axios({
-      url:"get_month_PutStatistics?month="+selet,
+      url:"get_month_PutStatistics?month="+dateString,
       method:"get"
     }).then(res =>{
       console.log(res);
@@ -204,7 +208,7 @@ class WarehousingRevenue extends Component {
     return (
       <div>
         <div className='Addre'>
-          <MonthPicker format='YYYY/MM' onChange={this.handleSearch} />
+          <MonthPicker format='YYYY-MM' onChange={this.handleSearch} />
           <Button type="primary" onClick={this.showModal}>新增</Button>
         </div>
         <AddForm1 

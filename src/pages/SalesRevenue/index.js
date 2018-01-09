@@ -11,29 +11,67 @@ class WarehousingRevenue extends Component {
     let visible=false;
     let dataSource= [];
     let pagination = {showSizeChanger: true, showQuickJumper: true, showTotal: total => '共 ' + total + ' 条'};
+    const sorter = {order: ""}
     this.state={
       visible,
       dataSource,
-      pagination
+      pagination,
+      sorter
     }
     const columns= [
       {title: '日期', dataIndex: 'date',key:"date"},
       {title: '金额', dataIndex: 'sellMoney',key:"sellMoney"},
       {title: '单号', dataIndex: 'sellNumber',key:"sellNumber"},
-      {title: '状态', dataIndex: 'status',render:(text,record) => this.statusRender(text,record)},
-      {title: '操作', dataIndex: 'unit', key: "unit",render:(text,record, index)=>{
-        return (
-            <div>
-              <Button onClick={()=>this.delateWR("delete",record)}>删除</Button>
-              <Button onClick={()=>this.delateWR("lits",record)}>提交财务</Button>
-            </div>
+      {title: '状态', dataIndex: 'status',key:'status',render:(text,record) => this.statusRender(text,record)},
+      // {title: '操作', dataIndex: 'unit', key: "unit",render:(text,record, index)=>{
+      //   return (
+      //       <div>
+      //         <Button onClick={()=>this.delateWR("delete",record)}>删除</Button>
+      //         <Button onClick={()=>this.delateWR("lits",record)}>提交财务</Button>
+      //       </div>
+      //   )
+      // }}
+      {title:'操作',dataIndex:'unit',key:'unit',render:(text,record) => {
+        return(
+          record.status==="1"?<div>
+                 <Button onClick={()=>this.delateWR("delete",record)}>删除</Button>
+               </div>
+               :
+               <div>
+          <Button onClick={()=>this.delateWR("delete",record)}>删除</Button>
+           <Button onClick={()=>this.delateWR("lits",record)}>提交财务</Button>
+         </div>
         )
+        
       }}
     ];
     this.columns = columns;
   };
+  changecaozuo = (text,record) => {
+    console.log(record.status,"================")
+    if(record.status==="1"){
+      return "3"
+    }
+    // console.log('text',text)
+    // console.log(record.status)
+    // if(record.status === '1'){
+    //   return (
+    //     <div>
+    //       <Button onClick={()=>this.delateWR("delete",record)}>删除</Button>
+    //     </div>
+    //   )
+    // }else{
+    //   return(
+    //     <div>
+    //       <Button onClick={()=>this.delateWR("delete",record)}>删除</Button>
+    //       <Button onClick={()=>this.delateWR("lits",record)}>提交财务</Button>
+    //     </div>
+    //   )
+    // }
+    // return 
+  }
   statusRender = (text, record) =>{
-    //console.log('text',text);
+    console.log('text',text);
     if(text !== '0'){
       return '加入计算';
     }else{
@@ -64,17 +102,35 @@ class WarehousingRevenue extends Component {
       })
     }
   }
+  // handleTableChange = (pagination, filters, sorter) => { 侯总 改的 分页效果 
+  //   const pager = {...this.state.pagination};
+  //   pager.current = pagination.current;
+  //   pager.pagesize = pagination.pageSize;
+  //   const sort = {};
+  //   sort.field = sorter.field;
+  //   sort.order = sorter.order;
+  //   this.axios({
+  //     pageindex:pager.current,
+  //     pagesize:pager.pagesize
+  //   })
+  // };
   handleTableChange = (pagination, filters, sorter) => {
     const pager = {...this.state.pagination};
-    pager.current = pagination.current;
+    let pageindex = 1;
+    if (sorter.field !== this.state.sorter.field) {
+      pageindex = 1;
+    } else {
+      pageindex = pagination.current
+    }
+    pager.current = pageindex;
     pager.pagesize = pagination.pageSize;
     const sort = {};
     sort.field = sorter.field;
     sort.order = sorter.order;
-    this.axios({
-      pageindex:pager.current,
-      pagesize:pager.pagesize
-    })
+    this.setState({
+      pagination: pager,
+      sorter: sort
+    });
   };
 
   axios = (params = {}) => {
@@ -127,7 +183,7 @@ class WarehousingRevenue extends Component {
   };
 
   componentDidMount() {
-    this.axios({pageindex: 1});
+    this.axios();
   }
   //新增的Modal
   showModal = () => {
@@ -150,11 +206,17 @@ class WarehousingRevenue extends Component {
   //日期
   handleSearch = (date, dateString) =>{//按条件搜索
     console.log("dateString",dateString)
-    // this.axios({
-    //   date: dateString,
-    //   pagesize:this.state.pagination.pagesize||10,
-    //   pageindex:1,
-    // });
+    let selet = dateString.replace("/","-");
+    console.log(selet);
+    axios({
+      url:"get_month_sell_statisticss?month="+selet,
+      method:"get"
+    }).then(res =>{
+      console.log(res);
+      this.setState({
+        dataSource:res.data.data        
+      })
+    })
   }
 
   render =() => {
@@ -172,7 +234,7 @@ class WarehousingRevenue extends Component {
           axios={this.axios}
           />
         <Table
-            className="components-table-nested"
+            //className="components-table-nested"
             loading={this.state.loading}
             pagination={pagination}
             dataSource={dataSource}

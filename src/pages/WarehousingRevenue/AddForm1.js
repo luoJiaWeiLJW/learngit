@@ -68,16 +68,16 @@ class AddForm extends Component {
         sm: { span: 16 },
       },
     };
-    const formItemLayoutReset = {
-      labelCol: {
-        xs: {span: 24},
-        sm: {span: 3},
-      },
-      wrapperCol: {
-        xs: {span: 24},
-        sm: {span: 16},
-      },
-    };
+    // const formItemLayoutReset = {
+    //   labelCol: {
+    //     xs: {span: 24},
+    //     sm: {span: 3},
+    //   },
+    //   wrapperCol: {
+    //     xs: {span: 24},
+    //     sm: {span: 16},
+    //   },
+    // };
     const config = {
       rules: [{ type: 'object', required: true, message: '请选择日期！' }],
     };

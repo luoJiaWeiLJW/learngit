@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Table, Checkbox, Button, AutoComplete ,message,TreeSelect,Modal,DatePicker} from 'antd';
+import { Form, Input,Modal,DatePicker,Select} from 'antd';
 import axios from "axios";
 const FormItem = Form.Item;
 const Option = Select.Option;
-const AutoCompleteOption = AutoComplete.Option;
-const TreeNode = TreeSelect.TreeNode;
 
 class AddForm extends Component {
   constructor(props){
@@ -66,7 +64,7 @@ class AddForm extends Component {
     console.log(`selected ${value}`);
     //是否摊销(除一次性支出外的其他类型都自动摊销)
     let changeAmortize = "0";
-    if(value != "0"){
+    if(value !== "0"){
       changeAmortize = "1";
     }else{
       //将摊销月份默认设置为1
@@ -91,7 +89,6 @@ class AddForm extends Component {
   }
   render(){
     const { getFieldDecorator } = this.props.form;
-    const FormItems = [];
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -102,22 +99,22 @@ class AddForm extends Component {
         sm: { span: 16 },
       },
     };
-    const formItemLayoutReset = {
-      labelCol: {
-        xs: {span: 24},
-        sm: {span: 3},
-      },
-      wrapperCol: {
-        xs: {span: 24},
-        sm: {span: 16},
-      },
-    };
+    // const formItemLayoutReset = {
+    //   labelCol: {
+    //     xs: {span: 24},
+    //     sm: {span: 3},
+    //   },
+    //   wrapperCol: {
+    //     xs: {span: 24},
+    //     sm: {span: 16},
+    //   },
+    // };
     const config = {
       rules: [{ type: 'object', required: true, message: '请选择日期！' }],
     };
-    const rangeConfig = {
-      rules: [{ type: 'array', required: true, message: '请选择日期！' }],
-    };
+    // const rangeConfig = {
+    //   rules: [{ type: 'array', required: true, message: '请选择日期！' }],
+    // };
     return(
       <Modal 
         visible={this.props.visible}

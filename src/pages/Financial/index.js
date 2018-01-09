@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {DatePicker, message, Table,Button} from 'antd';
 import checkCode from '../../config/codeTips';
-import moment from 'moment';
 import axios from 'axios';
 import './financial.css';
 const { MonthPicker } = DatePicker;
@@ -80,7 +79,7 @@ class Financial extends Component {
     return (
       <div>
         <div className="checkClass">
-        <span>月份</span><MonthPicker format='YYYY/MM' onChange={this.handleSearch} /><Button type="primary">查询</Button>
+        <span>月份</span><MonthPicker format='YYYY-MM' onChange={this.handleSearch} /><Button type="primary">查询</Button>
         </div>
         <Table rowKey={record=>record.id} dataSource={this.state.dataSource} columns={this.columns} onChange={this.handleTableChange} />
       </div>

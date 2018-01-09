@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
-import { InputNumber, Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete ,message,TreeSelect,Modal,DatePicker} from 'antd';
+import { InputNumber, Form,Modal} from 'antd';
 import axios from "axios";
 const FormItem = Form.Item;
-const Option = Select.Option;
-const AutoCompleteOption = AutoComplete.Option;
-const TreeNode = TreeSelect.TreeNode;
+
 class AddForm extends Component {
   constructor(props){
     super(props);
@@ -56,7 +54,6 @@ class AddForm extends Component {
   }
   render(){
     const { getFieldDecorator } = this.props.form;
-    const FormItems = [];
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -67,22 +64,22 @@ class AddForm extends Component {
         sm: { span: 16 },
       },
     };
-    const formItemLayoutReset = {
-      labelCol: {
-        xs: {span: 24},
-        sm: {span: 3},
-      },
-      wrapperCol: {
-        xs: {span: 24},
-        sm: {span: 16},
-      },
-    };
-    const config = {
-      rules: [{ type: 'object', required: true, message: '请选择日期！' }],
-    };
-    const rangeConfig = {
-      rules: [{ type: 'array', required: true, message: '请选择日期！' }],
-    };
+    // const formItemLayoutReset = {
+    //   labelCol: {
+    //     xs: {span: 24},
+    //     sm: {span: 3},
+    //   },
+    //   wrapperCol: {
+    //     xs: {span: 24},
+    //     sm: {span: 16},
+    //   },
+    // };
+    // const config = {
+    //   rules: [{ type: 'object', required: true, message: '请选择日期！' }],
+    // };
+    // const rangeConfig = {
+    //   rules: [{ type: 'array', required: true, message: '请选择日期！' }],
+    // };
     return(
       <Modal 
         visible={this.props.visible}

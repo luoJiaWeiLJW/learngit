@@ -2,12 +2,38 @@ import React from 'react';
 import {Form, Row, Col, Input, Button, Select,DatePicker } from 'antd';
 const Option = Select.Option;
 const FormItem = Form.Item;
-const { MonthPicker, RangePicker } = DatePicker;
 class AdvancedSearchForm extends React.Component {
+  handleSearch = (e) => {
+   
+    if (e) {
+      e.preventDefault();
+    }
+
+    this.props.form.validateFields((err, values) => {
+      
+      Object.keys(values).forEach(key => {
+        if(key !== 'date'){
+          if (values[key]) {
+          values[key] = encodeURI(values[key]);
+          // console.log('values',values)
+          } else {
+            values[key] = ""
+          }
+        }
+        
+      });
+      this.props.onSearch('search',values)
+     });
 
 
+
+  }
+  handlechange = (value,dateString) => {
+    //console.log("value",value)
+    console.log("dateString",dateString)
+    this.props.changeDate(dateString);
+  }
   getFields = () => {
-
     const {getFieldDecorator} = this.props.form;
     const formItemLayout = {
       labelCol: {span: 6},
@@ -25,12 +51,12 @@ class AdvancedSearchForm extends React.Component {
         let input = <Input autoComplete="off"/>;
         if(keys[i].dataIndex==="date"){
           input = (
-              <DatePicker styles={{width:"200px"}} />
+              <DatePicker styles={{width:"200px"}} format='YYYY-MM-DD' onChange={this.handlechange}/>
           )
         }
         if(keys[i].dataIndex==="dept") {
           input = (
-              <Select onSelect={this.handleSelect}>
+              <Select onSelect={this.hSelect}>
                 <Option value="0">生产</Option>
                 <Option value="1">销售</Option>
                 <Option value="2">其他</Option>
@@ -40,7 +66,7 @@ class AdvancedSearchForm extends React.Component {
         }
         if(keys[i].dataIndex==="variety"){
           input = (
-            <Select onSelect={this.handleSelect}>
+            <Select onSelect={this.hleSelect}>
                 <Option value="0">一次性支出</Option>
                 <Option value="1">原料支出</Option>
                 <Option value="2">固定资产支出</Option>

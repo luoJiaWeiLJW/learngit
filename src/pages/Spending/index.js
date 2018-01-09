@@ -12,12 +12,26 @@ class Spending extends Component {
         const pagination = {showSizeChanger: true, showQuickJumper: true, showTotal: total => '共 ' + total + ' 条'};
         const sorter = {order: ""};
         let loading = false;
+        const searchdate = "";
+        const searchDataSource="66";
+        const search={
+          name:null,
+          dept:null,
+          date:null,
+          variety:null,
+          type:null,
+        };
         this.state = {
+          searchDataSource,
             pagination,
             visible,
             dataSource,
             sorter,
-            loading
+            loading,
+            search,
+            searchdate,
+            abc:"",
+
         }
         const columns = [
             // {title: "编号", key: "order", render: (text, record, index) => index + 1},
@@ -88,7 +102,7 @@ class Spending extends Component {
         }).then(res=>{
            record.specialPass = "1";  //后台返回的意见是不通过，但是此操作是强制通过，需要改状态
            axios({
-             url:'update_expend/'+record.id,
+             url:'/update_expend/'+record.id,
              method:'put',
              data:{...record}
            }).then(res=>{
@@ -140,18 +154,7 @@ class Spending extends Component {
         return '是';
       }
     }
-    // handleTableChange = (pagination, filters, sorter) => {
-    //   const pager = {...this.state.pagination};
-    //   pager.current = pagination.current;
-    //   pager.pagesize = pagination.pageSize;
-    //   const sort = {};
-    //   sort.field = sorter.field;
-    //   sort.order = sorter.order;
-    //   this.axios({
-    //     pageindex:pager.current,
-    //     pagesize:pager.pagesize
-    //   })
-    // };
+
     handleTableChange = (pagination, filters, sorter) => {
       const pager = {...this.state.pagination};
       let pageindex = 1;
@@ -183,7 +186,7 @@ class Spending extends Component {
         }
       }
       axios({
-        url: "/all_expends",
+        url: "all_expends",
         method: "get",
         params: {
           ...params
@@ -241,19 +244,69 @@ class Spending extends Component {
           visible: false,
         });
       }
+      handleSearch = (text, data) => {
+        console.log(data,"333")
+        let datastr = JSON.stringify(data)
+        
+        const {search} = this.state;
+        const a="";
+        if (text !== 'search') {
+          search.type = (data ? data[0] : null);
+        }
+        else if (text === 'search') {
+           console.log(data.name)
+          this.setState({
+            abc:"444"
+          }) 
+           
+        }
+        
+        console.log('datastr',this.state.abc,"77777777777")
+           axios({
+            url:'/findByDeptAndDateAndNameAndVarietyCount?'+this.state.searchDataSource,
+            method:'get'
+          }).then(res=>{
+            console.log(res);
+            this.setState({
+              dataSource:res.data.data
+            })
+          })
+       
+      
+        
+        console.log(a,"44444444444444444")
+        console.log(search.name,"88888888888")
+        this.setState({
+          search,
+        });
+        
+      };
+      changeDate=(data1)=>{
+        console.log(data1,"AAAAAAAAAAAAAAA")
+        this.setState({
+           searchdate:data1
+        })
+       }
   render() {
     const {visible,dataSource}=this.state;
     return (
       <div>
         <div>
-            <SearchForm onSearch = {this.handleSearch} />
+            <SearchForm 
+              onSearch = {this.handleSearch} 
+              changeDate={this.changeDate}
+            />
             <Button onClick={this.showModal}>新增</Button>
         </div>
-        <Table className="components-table-nested" columns={this.columns} pagination={this.state.pagination} dataSource={dataSource} rowKey={record=>record.id}
+        <Table 
+          className="components-table-nested" 
+          columns={this.columns} 
+          pagination={this.state.pagination} 
+          dataSource={dataSource} 
+          rowKey={record=>record.id}
                />
         <AddForm3
           visible={visible}
-          //onOk={this.handleOk}
           onCancel={this.handleCancel}
           axios={this.axios}
           />
