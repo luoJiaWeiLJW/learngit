@@ -25,13 +25,26 @@ class WarehousingRevenue extends Component {
       {title: '金额', dataIndex: 'putMoney',key:"putMoney"},
       {title: '单号', dataIndex: 'putNumber',key:"putNumber"},
       {title: '状态', dataIndex: 'status',render:(text,record) => this.statusRender(text,record)},
-      {title: '操作', dataIndex: 'unit', key: "unit",render:(text,record, index)=>{
-        return (
-            <div>
-              <Button onClick={()=>this.delateWR("delete",record)}>删除</Button>
-              <Button onClick={()=>this.delateWR("lits",record)}>提交财务</Button>
-            </div>
+      // {title: '操作', dataIndex: 'unit', key: "unit",render:(text,record, index)=>{
+      //   return (
+      //       <div>
+      //         <Button onClick={()=>this.delateWR("delete",record)} style={{marginRight:10}}>删除</Button>
+      //         <Button onClick={()=>this.delateWR("lits",record)}>提交财务</Button>
+      //       </div>
+      //   )
+      // }}
+      {title:'操作',dataIndex:'unit',key:'unit',render:(text,record) => {
+        return(
+          record.status==="1"?<div>
+                 <Button onClick={()=>this.delateWR("delete",record)}>删除</Button>
+               </div>
+               :
+               <div>
+          <Button onClick={()=>this.delateWR("delete",record)} style={{marginRight:10}}>删除</Button>
+           <Button onClick={()=>this.delateWR("lits",record)}>提交财务</Button>
+         </div>
         )
+        
       }}
     ];
     this.columns = columns;
@@ -218,7 +231,7 @@ class WarehousingRevenue extends Component {
           axios={this.axios}
           />
         <Table
-            //className="components-table-nested"
+            className="components-table-nested"
             rowKey={record=>record.id}
             loading={this.state.loading}
             pagination={pagination}

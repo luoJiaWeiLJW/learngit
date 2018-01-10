@@ -38,7 +38,7 @@ class WarehousingRevenue extends Component {
                </div>
                :
                <div>
-          <Button onClick={()=>this.delateWR("delete",record)}>删除</Button>
+          <Button onClick={()=>this.delateWR("delete",record)} style={{marginRight:10}}>删除</Button>
            <Button onClick={()=>this.delateWR("lits",record)}>提交财务</Button>
          </div>
         )
@@ -234,7 +234,7 @@ class WarehousingRevenue extends Component {
           axios={this.axios}
           />
         <Table
-            //className="components-table-nested"
+            className="components-table-nested"
             loading={this.state.loading}
             pagination={pagination}
             dataSource={dataSource}

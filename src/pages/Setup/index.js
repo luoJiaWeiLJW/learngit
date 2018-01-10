@@ -20,9 +20,12 @@ class Setup extends Component {
       amonthCashFlow
     }
     const columns= [
-      {title: '月固定成本', dataIndex: 'monthFixedCost',width:'10%'},
-      {title: '每月利润目标', dataIndex: 'monthTarget',width:'10%'},
-      {title: '每月现金流增量目标', dataIndex: 'monthCashFlow',width:'10%'}
+      {title: '月固定成本', dataIndex: 'monthFixedCost',
+    },
+      {title: '每月利润目标', dataIndex: 'monthTarget',
+    },
+      {title: '每月现金流增量目标', dataIndex: 'monthCashFlow',
+    }
     ];
     this.columns = columns;
   };
@@ -122,8 +125,9 @@ class Setup extends Component {
       <div>
         <div>
         <Table
+            className="components-table-nested"
             loading={this.state.loading}
-            pagination={pagination}
+            pagination={false}
             dataSource={dataSource}
             columns={this.columns}
             axios={this.axios}

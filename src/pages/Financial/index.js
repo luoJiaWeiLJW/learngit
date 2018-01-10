@@ -79,9 +79,16 @@ class Financial extends Component {
     return (
       <div>
         <div className="checkClass">
-        <span>月份</span><MonthPicker format='YYYY-MM' onChange={this.handleSearch} /><Button type="primary">查询</Button>
+        <span>月份</span>
+        <MonthPicker format='YYYY-MM' onChange={this.handleSearch} />
+        <Button type="primary">查询</Button>
         </div>
-        <Table rowKey={record=>record.id} dataSource={this.state.dataSource} columns={this.columns} onChange={this.handleTableChange} />
+        <Table 
+          className="components-table-nested" 
+          rowKey={record=>record.id} 
+          dataSource={this.state.dataSource} 
+          columns={this.columns} 
+          onChange={this.handleTableChange} />
       </div>
     )
   }

@@ -3,7 +3,7 @@ import {message, Table, Button} from 'antd';
 import SearchForm from './searchForm';
 import AddForm3 from './AddForm3';
 import axios from 'axios';
-
+import './spending.css'
 class Spending extends Component {
     constructor(props) {
         super(props);
@@ -12,8 +12,7 @@ class Spending extends Component {
         const pagination = {showSizeChanger: true, showQuickJumper: true, showTotal: total => '共 ' + total + ' 条'};
         const sorter = {order: ""};
         let loading = false;
-        const searchdate = "";
-        const searchDataSource="66";
+        const searchdate = null;
         const search={
           name:null,
           dept:null,
@@ -22,15 +21,13 @@ class Spending extends Component {
           type:null,
         };
         this.state = {
-          searchDataSource,
             pagination,
             visible,
             dataSource,
             sorter,
             loading,
             search,
-            searchdate,
-            abc:"",
+            searchdate
 
         }
         const columns = [
@@ -192,7 +189,8 @@ class Spending extends Component {
           ...params
         }
        }).then(res => {
-         //console.log('res',res);
+         console.log('所有支出',res);
+         //debugger
          if(res.status !== 200){
            //console.log('xxx');
             const pagination = {...this.state.pagination};
@@ -244,47 +242,9 @@ class Spending extends Component {
           visible: false,
         });
       }
-      handleSearch = (text, data) => {
-        console.log(data,"333")
-        let datastr = JSON.stringify(data)
-        
-        const {search} = this.state;
-        const a="";
-        if (text !== 'search') {
-          search.type = (data ? data[0] : null);
-        }
-        else if (text === 'search') {
-           console.log(data.name)
-          this.setState({
-            abc:"444"
-          }) 
-           
-        }
-        
-        console.log('datastr',this.state.abc,"77777777777")
-           axios({
-            url:'/findByDeptAndDateAndNameAndVarietyCount?'+this.state.searchDataSource,
-            method:'get'
-          }).then(res=>{
-            console.log(res);
-            this.setState({
-              dataSource:res.data.data
-            })
-          })
-       
-      
-        
-        console.log(a,"44444444444444444")
-        console.log(search.name,"88888888888")
+      changeTable=(res)=>{
         this.setState({
-          search,
-        });
-        
-      };
-      changeDate=(data1)=>{
-        console.log(data1,"AAAAAAAAAAAAAAA")
-        this.setState({
-           searchdate:data1
+          dataSource : res
         })
        }
   render() {
@@ -294,9 +254,9 @@ class Spending extends Component {
         <div>
             <SearchForm 
               onSearch = {this.handleSearch} 
-              changeDate={this.changeDate}
+              changeTable={this.changeTable}
             />
-            <Button onClick={this.showModal}>新增</Button>
+            <Button type="primary" onClick={this.showModal} style={{marginBottom:20}}>新增</Button>
         </div>
         <Table 
           className="components-table-nested" 
